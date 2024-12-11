@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'Dog.dart';
 
@@ -5,6 +6,27 @@ class DogDetailScreen extends StatelessWidget {
   final Dog dog;
 
   DogDetailScreen({required this.dog});
+
+  Widget buildImage(String imagePath) {
+    if (imagePath.startsWith('/')) {
+      final file = File(imagePath);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          height: 300,
+          fit: BoxFit.cover,
+        );
+      } else {
+        return Icon(Icons.broken_image, size: 300);
+      }
+    } else {
+      return Image.asset(
+        imagePath,
+        height: 300,
+        fit: BoxFit.cover,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +38,7 @@ class DogDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset(
-              dog.imageUrl,
-              height: 300,
-              fit: BoxFit.cover,
-            ),
+            buildImage(dog.imageUrl),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
